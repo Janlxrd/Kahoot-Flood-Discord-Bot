@@ -8,6 +8,9 @@ const Kahoot = require("kahoot.js-updated")
 //Prefix
 const Prefix = "-"
 
+//Dotenv
+require('dotenv').config()
+
 //Noblox
 const noblox = require("noblox.js")
 
@@ -510,4 +513,4 @@ client.on("message", message => {
 
 
 //Login
-client.login("NzcwMzY0NDgwMzM2NjkxMjIw.X5cf1A.JPpRMXlEhFz2DVF1vvPaeQ4I2AI")
+client.login(process.env.TOKEN)
