@@ -234,6 +234,27 @@ function generateString(length) {
     return result;
 }
 
+//Help command
+client.on("message", message => {
+    if (message.content.startsWith(Prefix)) {
+        let args = shortenA(message.content, Prefix);
+        switch(args[0]) {
+            case "help":
+                const em = new Discord.RichEmbed()
+                    .setColor('#0099ff')
+                    .setTitle('Help')
+                    .setDescription('These are the available commands!')
+                    .addField('kahoot', 'flood kahoots, to see more usage use the command\nwithout any additional arguments!')
+                    .addField('Useful links:', value='[Invite me](https://discord.com/api/oauth2/authorize?client_id=770364480336691220&permissions=0&scope=bot) | [Source GitHub](https://github.com/Janlxrd/Kahoot-Floot-Discord-Bot)', true)
+                    .setTimestamp()
+                    .setFooter('Powered by KahootBot', 'https://media.discordapp.net/attachments/821821931035951112/838814770135957585/Screenshot_2021-05-03_092929.png?width=461&height=462')
+                message.channel.send(em);
+        }
+    }
+});
+
+
+
 //Kahoot command
 client.on("message", message => {
     if (message.content.startsWith(Prefix)) {
