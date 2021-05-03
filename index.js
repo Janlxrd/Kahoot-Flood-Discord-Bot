@@ -272,41 +272,6 @@ client.on("message", message => {
         }
     }
 })
-//Proxy generator
-client.on("message", message => {
-    if (message.content.startsWith(Prefix)) {
-        let args = shorten(message.content, Prefix)
-        switch(args[0]) {
-            case "proxy":
-            axios({
-                method: "get",
-                url: "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=450&country=all&ssl=all&anonymity=all&simplified=true",
-            }).then(res => {
-                const str = generateString(4)
-                fs.writeFile(message.author.username + ".txt", res.data, function(err) {
-                    message.channel.send("Here are your proxies!", {
-                        files: [
-                            "./" + message.author.username +".txt"
-                        ]
-                    }).then(() => {
-                        fs.unlinkSync(message.author.username + ".txt")
-                    })
-                })
-            })
-        }
-    }
-})
-
-//User-agent generator
-client.on("message", message => {
-    if (message.content.startsWith(Prefix)) {
-        let args = shorten(message.content, Prefix)
-        switch(args[0]) {
-            case "ua":
-            message.channel.send(useragent.getRandom())
-        }
-    }
-})
 
 //Visit website test
 client.on("message", message => {
@@ -342,94 +307,6 @@ client.on("message", message => {
 })
 
 
-
-//Proxy generator v2
-client.on("message", message => {
-    if (message.content.startsWith(Prefix)) {
-        let args = shorten(message.content, Prefix)
-        switch(args[0]) {
-            case "proxyv2":
-                var proxiesCombined = ""
-            axios({
-                method: "get",
-                url: "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=450&country=all&ssl=all&anonymity=all&simplified=true",
-            }).then(res => {
-                proxiesCombined += res.data.replace("\n", "").replace("/r", "") + "\n"
-                axios({
-                    method: "get",
-                    url: "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=500&country=all&ssl=all&anonymity=all&simplified=true",
-                }).then(res => {
-                    proxiesCombined += res.data.replace("\n", "").replace("/r", "") + "\n"
-                    axios({
-                        method: "get",
-                        url: "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=400&country=all&ssl=all&anonymity=all&simplified=true",
-                    }).then(res => {
-                        proxiesCombined += res.data.replace("\n", "").replace("/r", "") + "\n"
-                        axios({
-                            method: "get",
-                            url: "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=600&country=all&ssl=all&anonymity=all&simplified=true",
-                        }).then(res => {
-                            proxiesCombined += res.data.replace("\n", "").replace("/r", "") + "\n"
-                            axios({
-                                method: "get",
-                                url: "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=650&country=all&ssl=all&anonymity=all&simplified=true",
-                            }).then(res => {
-                                proxiesCombined += res.data.replace("\n", "").replace("/r", "") + "\n"
-                            })
-                        })
-                    })
-                })
-            })
-
-            setTimeout(function() {
-                fs.writeFile(message.author.username + ".txt", proxiesCombined, function(err) {
-                    message.channel.send("Here are your proxies!", {
-                        files: [
-                            "./" + message.author.username +".txt"
-                        ]
-                    }).then(() => {
-                        fs.unlinkSync(message.author.username + ".txt")
-                    })
-                })
-            }, 3000)
-        }
-    }
-})
-
-//Roblox cookie resetter
-client.on("message", message => {
-    if (message.content.startsWith(Prefix)) {
-        let args = shorten(message.content, Prefix)
-        switch(args[0]) {
-            case "reset":
-            if (args.length == 2) {
-                message.channel.send("We are currently checking if the cookie is correct.").then(msg => {
-                    noblox.setCookie(args[1]).then(() => {
-                        var amount = 0
-                        msg.edit("Hold on...")
-                        noblox.refreshCookie(args[1]).then(e => {
-                            msg.edit("We have successfully reset your cookie, your account may have logged out. Here is your new cookie incase you cant log back in.\n\n```" + e + "```")
-                        })
-                    }).catch(err => {
-                        msg.edit("Invalid cookie provided.")
-                    })
-                }).catch(err => {})
-            }
-        }
-    }
-})
-
-//V2
-client.on("message", message => {
-    if (message.content.startsWith(Prefix)) {
-        let args = shorten(message.content, Prefix)
-        switch(args[0]) {
-            case "name":
-            //Generate
-            message.channel.send(V2())
-        }
-    }
-})
 
 //Kahoot command (Username random)
 client.on("message", message => {
@@ -469,48 +346,5 @@ client.on("message", message => {
         }
     }
 })
-
-//Username checker
-client.on("message", message => {
-    if (message.content.startsWith(Prefix)) {
-        let args = shortenA(message.content, Prefix)
-        switch(args[0]) {
-            case "check":
-            if (args.length == 2) {
-                var Roblox = ""
-                var Minecraft = ""
-                message.channel.send("Currently checking userrnames for " + args[1] + "\nRoblox: Checking...\nMinecraft: Checking...").then(msg => {
-                    noblox.getIdFromUsername(args[1]).then(e => {
-                        Roblox = "Taken"
-                        msg.edit("Currently checking userrnames for " + args[1] + "\nRoblox: " + Roblox + "\nMinecraft: Checking...")
-                    }).catch(err => {
-                        Roblox = "Not taken"
-                        msg.edit("Currently checking userrnames for " + args[1] + "\nRoblox: " + Roblox + "\nMinecraft: Checking...")
-                    })
-                    axios({
-                        method: "get",
-                        url: "https://namemc.com/search?q=" + args[1]
-                    }).then(res => {
-                        if (res.data.includes('content="Status: Available*') == true) {
-                            Minecraft = "Not taken"
-                            msg.edit("Currently checking userrnames for " + args[1] + "\nRoblox: " + Roblox + "\nMinecraft: " + Minecraft)
-                        } else {
-                            if (res.data.includes("<div>Unavailable</div>") == true) {
-                                Minecraft = "Taken"
-                                msg.edit("Currently checking userrnames for " + args[1] + "\nRoblox: " + Roblox + "\nMinecraft: " + Minecraft)
-                            }
-                        }
-                    })
-                })
-            } else {
-                message.channel.send("Make sure you have correct arguments! " + Prefix + "check USERNAME")
-            }
-        }
-    }
-})
-
-
-
-
 //Login
 client.login(process.env.TOKEN)
