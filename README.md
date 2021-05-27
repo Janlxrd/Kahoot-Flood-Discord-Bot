@@ -1,1 +1,1 @@
-# Kahoot-Floot-Discord-Bot
+# Kahoot-Flood-Discord-Bot
